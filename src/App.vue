@@ -7,6 +7,8 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <HelloWorld msg="Hello Vue 3 + Vite" />
+
+    <div class="bg-gray-100 p-4 text-center">Hello TailwindCSS</div>
 </template>
 
 <style>
