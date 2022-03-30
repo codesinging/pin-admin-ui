@@ -1,4 +1,5 @@
-export const appConfig = {
-    name: '品凡后台管理系统',
-    home: '/home',
-}
+import app from './app'
+export const appConfig = app
+
+import storage from "./storage"
+export const storageConfig = storage
