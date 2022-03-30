@@ -2,12 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>PinFan Admin UI</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div id="app">
+        <style>
+            html, body, #app {
+                height: 100vh;
+                margin: 0;
+            }
+            #app{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #logo {
+                width: 64px;
+                height: 64px;
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: .5;
+                }
+            }
+            @keyframes bounce {
+                0%, 100% {
+                    transform: translateY(-25%);
+                    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+                }
+                50% {
+                    transform: translateY(0);
+                    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+                }
+            }
+        </style>
+        <img id="logo" src="/logo.svg" alt="PinFan Logo">
+    </div>
+<!--    <script type="module" src="/src/main.js"></script>-->
   </body>
 </html>
