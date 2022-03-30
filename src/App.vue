@@ -1,23 +1,19 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <el-config-provider size="large">
+      <div class="bg-gray-100 p-4 text-center">Hello TailwindCSS</div>
 
-    <div class="bg-gray-100 p-4 text-center">Hello TailwindCSS</div>
+      <div>
+          <el-button>Button</el-button>
+          <el-button type="success">Button</el-button>
+      </div>
+      <div>
+          <el-button size="small">small</el-button>
+          <el-button size="default">default</el-button>
+          <el-button size="large">large</el-button>
+      </div>
+  </el-config-provider>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<script setup>
+
+</script>
