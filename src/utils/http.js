@@ -4,9 +4,6 @@ import httpConfig from "../config/http"
 import {useAuth} from "../states/auth";
 import {useStatus} from "../states/status";
 
-const status = useStatus()
-const auth = useAuth()
-
 // 默认请求标记
 const defaultLabel = 'loading'
 
@@ -15,6 +12,7 @@ const defaultLabel = 'loading'
  * @param label
  */
 const setStatus = label => {
+    const status = useStatus()
     status.set(defaultLabel)
     if (label) {
         status.set(label)
@@ -26,6 +24,7 @@ const setStatus = label => {
  * @param label
  */
 const unsetStatus = label => {
+    const status = useStatus()
     status.unset(defaultLabel)
     if (label) {
         status.unset(label)
@@ -47,7 +46,7 @@ const showLog = (title, content) => {
  * @param config
  */
 const showSuccess = (content, config) => {
-    if (config.message || config.success) {
+    if (config.message !== false && (config.message || config.success)) {
         message.success(typeof config.success === 'string' ? config.success : content)
     }
 }
@@ -58,7 +57,7 @@ const showSuccess = (content, config) => {
  * @param config
  */
 const showError = (content, config) => {
-    if (config.message || config.error) {
+    if (config.message !== false && (config.message || config.error)) {
         message.error(typeof config.error === 'string' ? config.error : content)
     }
 }
@@ -125,6 +124,7 @@ const http = axios.create(httpConfig)
 
 // 请求拦截器中添加认证信息
 http.interceptors.request.use(config => {
+    const auth = useAuth()
     if (auth.token) {
         config.headers.Authorization = 'Bearer ' + auth.token
     }
