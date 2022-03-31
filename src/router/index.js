@@ -1,12 +1,30 @@
 import {createRouter, createWebHashHistory} from "vue-router"
-
+import guests from './guests'
 import routes from "~pages"
-
-console.log(routes)
+import {appConfig, authConfig} from "../config"
+import {useAuth} from "../states/auth";
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes,
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.path === '/'){
+        next(appConfig.home)
+    } else {
+        if (guests.includes(to.path)){
+            next()
+        } else {
+            const auth = useAuth()
+
+            auth.check().then(()=>{
+                next()
+            }).catch(()=> {
+                next(authConfig.login)
+            })
+        }
+    }
 })
 
 export default router
