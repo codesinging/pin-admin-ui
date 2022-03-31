@@ -1,1 +1,11 @@
 @import "./vendor/tailwindcss.css";
+@import "./vendor/bootstrap-icons.css";
+
+@import "./resets/form.css";
+@import "./resets/button.css";
+@import "./resets/input.css";
+@import "./resets/menu.css";
+@import "./resets/tabs.css";
+@import "./resets/pagination.css";
+@import "./resets/dialog.css";
+@import "./resets/color-picker.css";

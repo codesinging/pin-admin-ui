@@ -3,6 +3,8 @@ import message from "./message"
 import httpConfig from "../config/http"
 import {useAuth} from "../states/auth";
 import {useStatus} from "../states/status";
+import {authConfig} from "../config";
+import router from "../router";
 
 // 默认请求标记
 const defaultLabel = 'loading'
@@ -106,9 +108,16 @@ const handle = (request, config) => {
             }
         }).catch(error => {
             error = error.toJSON()
+
             let content = error.status === null ? '网络或服务器连接错误' : `[${error.status}]${error.response?.data?.message || error.response?.message || error.message || '请求响应错误'}`
             showError(content, config)
             showLog('http response error', error)
+
+            if (error.status === 401){
+                const auth = useAuth()
+                auth.logout()
+                router.push(authConfig.login)
+            }
 
             if (config.catch) {
                 reject(content)

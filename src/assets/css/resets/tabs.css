@@ -1,0 +1,7 @@
+.layout-tab .el-tabs__header{
+    margin: 0 !important;
+}
+
+.el-tabs__item .is-icon-close svg{
+    margin-left: 1px;
+}

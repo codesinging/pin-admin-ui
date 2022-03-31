@@ -1,0 +1,26 @@
+.el-menu {
+    border-right: none !important;
+}
+
+.el-sub-menu__icon-arrow {
+    margin-top: -5px !important;
+}
+
+.el-sub-menu__title span.title {
+    padding-right: 32px;
+}
+
+.el-menu-item i[class^=bi-],
+.el-sub-menu__title i[class^=bi-]{
+    margin-right: 8px;
+}
+
+.el-menu-item:hover,
+.el-sub-menu__title:hover {
+    background: #1F2937 !important;
+}
+
+.el-menu--collapse{
+    width: 54px !important;
+}
+

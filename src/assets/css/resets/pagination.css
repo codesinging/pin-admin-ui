@@ -1,0 +1,8 @@
+.el-pagination svg{
+    display: inline !important;
+    vertical-align: baseline !important;
+}
+
+.el-pagination :focus{
+    outline: none;
+}

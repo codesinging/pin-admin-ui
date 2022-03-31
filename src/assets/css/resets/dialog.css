@@ -1,0 +1,7 @@
+.el-dialog__header{
+    @apply border-b p-4 !important;
+}
+
+.el-dialog__footer{
+    @apply border-t px-4 py-3 !important;
+}

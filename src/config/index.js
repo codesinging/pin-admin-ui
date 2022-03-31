@@ -9,3 +9,6 @@ export const authConfig = auth
 
 import http from "./http"
 export const httpConfig = http
+
+import layout from "./layout"
+export const layoutConfig = layout
