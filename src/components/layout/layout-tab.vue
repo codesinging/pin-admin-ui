@@ -2,10 +2,10 @@
     <div v-if="tabs.length > 0" class="flex px-4 mt-4">
         <div class="flex-1 overflow-hidden layout-tab">
             <el-tabs v-model="activeTabId" type="card" @tab-remove="onTabRemove">
-                <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.name" :name="tab.id" :closable="!tab.is_home"></el-tab-pane>
+                <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.name" :name="tab.id" :closable="!tab.default"></el-tab-pane>
             </el-tabs>
         </div>
-        <div class="w-10 flex-shrink-0 border-b flex items-center justify-end">
+        <div v-if="tabs.length>2" class="w-10 flex-shrink-0 border-b flex items-center justify-end">
             <div class="flex items-center justify-center w-8 h-8 bg-gray-50 rounded cursor-pointer">
                 <el-dropdown placement="bottom-end" @command="onTabCommand">
                     <i class="bi-chevron-down"></i>

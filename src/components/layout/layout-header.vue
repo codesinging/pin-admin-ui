@@ -6,12 +6,14 @@
             </el-breadcrumb>
         </div>
         <div v-if="user" class="flex items-center space-x-2 h-full">
-            <div @click="toggleFullscreen" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer">
-                <component :is="isFullscreen ? OffScreen:FullScreen" :stroke-width="3" :size="18"/>
-            </div>
+            <el-tooltip placement="bottom" :content="isFullscreen?'退出全屏':'全屏显示'">
+                <div @click="toggleFullscreen" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer">
+                    <component :is="isFullscreen ? OffScreen:FullScreen" :stroke-width="3" :size="18"/>
+                </div>
+            </el-tooltip>
             <el-dropdown>
                 <div class="flex items-center space-x-1 cursor-pointer">
-                    <el-avatar :size="32" :src="user.avatar"></el-avatar>
+                    <el-avatar :size="32" :src="user.avatar" :icon="User"></el-avatar>
                     <div class="text-sm">{{ user.name }}</div>
                     <i class="bi-chevron-down mt-1"></i>
                 </div>
@@ -36,7 +38,7 @@ import {treePath} from "../../utils/tree";
 import apis from "../../apis";
 import {useRouter} from "vue-router";
 import {authConfig} from "../../config";
-import {FullScreen, OffScreen} from "@icon-park/vue-next";
+import {FullScreen, OffScreen, User} from "@icon-park/vue-next";
 
 const layout = useLayout()
 const auth = useAuth()
