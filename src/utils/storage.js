@@ -33,7 +33,7 @@ class Storage {
         }
 
         this.driver.setItem(this.prefixedKey(key), JSON.stringify(value))
-        return value
+        return value.value
     }
 
     get(key, def = null) {
@@ -56,8 +56,28 @@ class Storage {
     }
 }
 
-export const storage = (prefix, driver) => {
-    return new Storage(config.prefix + (prefix ? ('_' + prefix) : ''), driver)
+class UseStorage {
+    constructor(key) {
+        this.key = key
+        this.storage = new Storage(config.prefix, config.driver)
+    }
+
+    set(value, expire = 0){
+        this.storage.set(this.key, value, expire)
+        return value
+    }
+
+    get(def){
+        return this.storage.get(this.key, def)
+    }
+
+    remove(){
+        this.storage.remove(this.key)
+    }
+}
+
+export const useStorage = (key) => {
+    return new UseStorage(key)
 }
 
 export default new Storage(config.prefix, config.driver)
