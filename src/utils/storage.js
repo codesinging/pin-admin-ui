@@ -1,9 +1,9 @@
 import config from '../config/storage'
 
-class Storage{
+class Storage {
     constructor(prefix, driver) {
         this.prefix = prefix
-        this.driver = driver
+        this.driver = driver || window.localStorage
     }
 
     prefixedKey(key) {
@@ -32,7 +32,8 @@ class Storage{
             expire: expire === 0 ? 0 : (new Date().getTime() + expire)
         }
 
-        return this.driver.setItem(this.prefixedKey(key), JSON.stringify(value))
+        this.driver.setItem(this.prefixedKey(key), JSON.stringify(value))
+        return value
     }
 
     get(key, def = null) {
@@ -53,6 +54,10 @@ class Storage{
 
         return def
     }
+}
+
+export const storage = (prefix, driver) => {
+    return new Storage(config.prefix + (prefix ? ('_' + prefix) : ''), driver)
 }
 
 export default new Storage(config.prefix, config.driver)
