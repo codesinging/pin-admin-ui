@@ -103,9 +103,9 @@ import {Plus, Refresh} from "@icon-park/vue-next";
 import apis from "../../apis";
 import {computed, onMounted, provide, reactive, ref, toRefs} from "vue";
 import {useStatus} from "../../states/status";
-import ExtendDialog from "../extend/ExtendDialog.vue";
+import ExtendDialog from "../extend/extend-dialog.vue";
 import {warning} from "../../utils/message";
-import ExtendDescriptions from "../extend/ExtendDescriptions.vue";
+import ExtendDescriptions from "../extend/extend-descriptions.vue";
 import SwitchColumn from "../columns/switch-column.vue";
 import InputNumberColumn from "../columns/input-number-column.vue";
 

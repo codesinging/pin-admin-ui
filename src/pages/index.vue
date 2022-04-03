@@ -50,7 +50,7 @@ apis.auth.menus({label: 'menu', message: false, catch: true}).then(res => {
 
     layout.addTab(layout.homeMenu)
     layout.addTab(currentMenu)
-    layout.setActiveMenu(currentMenu)
+    layout.setActiveMenu(currentMenu||layout.homeMenu)
 
     screensaver.hide()
 }).catch(() => {

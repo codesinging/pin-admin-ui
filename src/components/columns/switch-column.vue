@@ -1,5 +1,5 @@
 <template>
-    <el-table-column :label="label" :prop="prop" align="center" width="100">
+    <el-table-column :label="label" align="center" width="100">
         <template #default="scope">
             <el-switch
                 v-model="scope.row[prop]"

@@ -24,7 +24,9 @@ export const useLayout  = defineStore('layout', {
         },
 
         setActiveMenu(menu) {
-            this.activeMenu = menu
+            if (menu){
+                this.activeMenu = menu
+            }
         },
 
         addTab(tab) {

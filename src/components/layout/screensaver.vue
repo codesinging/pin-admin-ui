@@ -12,8 +12,15 @@
 
 <script setup>
 import {useScreensaver} from "../../states/screensaver";
+import {provide} from "vue";
 
 const screensaver = useScreensaver()
+
+const props = defineProps({
+    path: String,
+})
+
+provide('originalPath', props.path)
 </script>
 
 <style scoped>

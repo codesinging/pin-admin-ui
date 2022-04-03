@@ -4,6 +4,7 @@
             <div class="flex items-center space-x-2">
                 <edit/>
                 <span>{{ title }}</span>
+                <loading-icon v-if="loading"/>
             </div>
         </template>
         <slot></slot>
@@ -38,11 +39,13 @@
 import {Edit, Plus, Minus, FullScreen} from "@icon-park/vue-next";
 import {computed, getCurrentInstance, reactive, ref} from "vue";
 import {useStorage} from "../../utils/storage";
+import LoadingIcon from "../icons/LoadingIcon.vue";
 
 defineProps({
     modelValue: Boolean,
     title: String,
     attributes: Object,
+    loading: Boolean,
 })
 
 const storage = useStorage('component_' + getCurrentInstance().uid)

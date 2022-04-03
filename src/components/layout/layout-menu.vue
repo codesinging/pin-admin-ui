@@ -5,7 +5,7 @@
                 v-if="menus.length>0"
                 @select="select"
                 :collapse="collapsed"
-                :default-active="activeMenu.id"
+                :default-active="activeMenu?.id"
                 :default-openeds="openedMenuIds"
                 background-color="#374151"
                 text-color="#fff"
@@ -26,7 +26,7 @@ const layout = useLayout()
 const menus = computed(() => layout.menus)
 const activeMenu = computed(() => layout.activeMenu)
 const collapsed = computed(() => layout.collapsed)
-const openedMenuIds = computed(() => menus.value.filter(menu => menu.default).map(menu => menu.id))
+const openedMenuIds = computed(() => menus.value.filter(menu => menu.opened).map(menu => menu.id))
 const menuTree = computed(() => layout.menuTree)
 
 const select = index => {

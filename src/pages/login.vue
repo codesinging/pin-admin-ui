@@ -58,7 +58,7 @@ const form = ref()
 const submit = () => {
     form.value.validate(valid => {
         if (valid) {
-            apis.auth.login(data, {label: 'submit', message: false}).then(res => {
+            apis.auth.login(data, {label: 'submit', success: false}).then(res => {
                 auth.login(res.token, res.admin)
                 status.set('redirect')
                 router.push(appConfig.home).then(() => status.unset('redirect'))
