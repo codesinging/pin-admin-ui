@@ -49,7 +49,7 @@ const showLog = (title, content) => {
  */
 const showSuccess = (content, config) => {
     if (config.message !== false && (config.message || config.success)) {
-        message.success(typeof config.success === 'string' ? config.success : content)
+        message.success((typeof config.success === 'string' ? config.success : content) || '操作成功')
     }
 }
 
