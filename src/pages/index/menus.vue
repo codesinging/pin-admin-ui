@@ -1,5 +1,5 @@
 <template>
-    <model-view ref="view" model="menu" is-tree show-status-column show-sort-column :form-attributes="{labelPosition: 'top'}">
+    <model-view ref="view" model="menu" is-tree show-status-column show-sort-column>
         <template #table-columns>
             <el-table-column prop="icon" label="图标" width="60" align="center">
                 <template #default="scope">

@@ -40,8 +40,8 @@
 
     <!--分页-->
     <div v-if="!isTree" class="mt-2 px-2 h-11 bg-gray-50 flex items-center justify-between">
-        <el-pagination v-if="pageable" background small layout="total, prev, pager, next" v-model:current-page="lister.page" :total="lister.total"></el-pagination>
-        <el-pagination v-else background small layout="total, prev, pager, next" :total="lister.total"></el-pagination>
+        <el-pagination v-if="pageable" background small layout="total, prev, pager, next" v-model:current-page="lister.page" :total="lister.total"/>
+        <el-pagination v-else background small layout="total" :total="lister.total"/>
     </div>
 
     <!--编辑对话框-->
@@ -52,7 +52,7 @@
         :close-on-click-modal="false"
         :loading="status.status.show"
     >
-        <el-form ref="form" :model="formData" v-bind="formAttributes" @keyup.enter="onSubmit">
+        <el-form ref="form" :model="formData" label-position="top" v-bind="formAttributes" @keyup.enter="onSubmit">
             <slot name="form-items" :data="formData" :list="tableData"></slot>
         </el-form>
 
@@ -237,7 +237,7 @@ const {
 const api = apis[model]
 
 // 列表
-const lister = ref(pageable ? {page: 1, size: pageSize, data: []} : {page: 0, data: []})
+const lister = ref(pageable ? {page: 1, size: pageSize, data: [], total: 0} : {page: 0, data: [], total: 0})
 
 // 把数组转换成列表
 const toLister = lister => lister.page === undefined ? {page: 0, data: lister, total: lister.length} : lister

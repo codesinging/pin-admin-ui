@@ -15,5 +15,21 @@ export default {
         update: (data, config) => http.put('admin_menus/' + data.id, data, config),
         destroy: (data, config) => http.delete('admin_menus/' + data.id, config),
         show: (data, config) => http.get('admin_menus/' + data.id, config),
-    }
+    },
+
+    admin: {
+        list: (config) => http.get('admins', config),
+        store: (data, config) => http.post('admins', data, config),
+        update: (data, config) => http.put('admins/' + data.id, data, config),
+        destroy: (data, config) => http.delete('admins/' + data.id, config),
+        show: (data, config) => http.get('admins/' + data.id, config),
+    },
+
+    role: {
+        list: (config) => http.get('admin_roles', config),
+        store: (data, config) => http.post('admin_roles', data, config),
+        update: (data, config) => http.put('admin_roles/' + data.id, data, config),
+        destroy: (data, config) => http.delete('admin_roles/' + data.id, config),
+        show: (data, config) => http.get('admin_roles/' + data.id, config),
+    },
 }
