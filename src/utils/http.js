@@ -107,13 +107,19 @@ const handle = (request, config) => {
                 }
             }
         }).catch(error => {
-            error = error.toJSON()
-
-            let content = error.status === null ? '网络或服务器连接错误' : `[${error.status}]${error.response?.data?.message || error.response?.message || error.message || '请求响应错误'}`
+            let content
+            let err
+            if (error.response) {
+                content = `[${error.response.status}]${error.response?.data?.message || error.response?.message || '请求响应错误'}`
+                err = error.response
+            } else {
+                content = error.status === null ? '网络或服务器连接错误' : `[${error.status}]${error.message || '请求响应错误'}`
+                err = error.toJSON()
+            }
             showError(content, config)
-            showLog('http response error', error)
+            showLog('http response error', err)
 
-            if (error.status === 401){
+            if (error.status === 401) {
                 const auth = useAuth()
                 auth.logout()
                 router.push(authConfig.login)
