@@ -59,7 +59,9 @@ const showSuccess = (content, config) => {
  * @param config
  */
 const showError = (content, config) => {
-    if (config.message !== false && (config.message || config.error)) {
+    if (!config) {
+        message.error(content)
+    } else if (config.message !== false && (config.message || config.error)) {
         message.error(typeof config.error === 'string' ? config.error : content)
     }
 }
@@ -107,22 +109,17 @@ const handle = (request, config) => {
                 }
             }
         }).catch(error => {
-            let content
-            let err
-            if (error.response) {
-                content = `[${error.response.status}]${error.response?.data?.message || error.response?.message || '请求响应错误'}`
-                err = error.response
-            } else {
-                content = error.status === null ? '网络或服务器连接错误' : `[${error.status}]${error.message || '请求响应错误'}`
-                err = error.toJSON()
-            }
-            showError(content, config)
-            showLog('http response error', err)
+            let status = error.response?.status || error.status
+            let content = error.response?.data?.message || error.response?.message || error.message || '请求响应错误'
+            let detail = error.response || error.toJSON()
 
-            if (error.status === 401) {
-                const auth = useAuth()
-                auth.logout()
-                router.push(authConfig.login)
+            content = status === null ? '网络或服务器连接错误' : `[${status}]${content}`
+
+            showError(content, config)
+            showLog('http response error', detail)
+
+            if (status === 401) {
+                showError('授权令牌失效，请重新登录')
             }
 
             if (config.catch) {
