@@ -32,4 +32,12 @@ export default {
         destroy: (data, config) => http.delete('admin_roles/' + data.id, config),
         show: (data, config) => http.get('admin_roles/' + data.id, config),
     },
+
+    page: {
+        list: (config) => http.get('admin_pages', config),
+        store: (data, config) => http.post('admin_pages', data, config),
+        update: (data, config) => http.put('admin_pages/' + data.id, data, config),
+        destroy: (data, config) => http.delete('admin_pages/' + data.id, config),
+        show: (data, config) => http.get('admin_pages/' + data.id, config),
+    },
 }
