@@ -113,7 +113,7 @@ const handle = (request, config) => {
             let content = error.response?.data?.message || error.response?.message || error.message || '请求响应错误'
             let detail = error.response || error.toJSON()
 
-            content = status === null ? '网络或服务器连接错误' : `[${status}]${content}`
+            content = (status === null || status === undefined) ? '网络或服务器连接错误' : `[${status}]${content}`
 
             showError(content, config)
             showLog('http response error', detail)
