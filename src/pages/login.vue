@@ -5,7 +5,7 @@
                 <div class="flex items-center justify-center">管理员登录</div>
             </template>
 
-            <el-form :model="data" ref="form" :rules="rules" @keyup.enter="submit">
+            <el-form :model="data" ref="form" :rules="rules" @keyup.enter="submit" :disabled="status.status.submit||status.status.redirect">
                 <el-form-item prop="username">
                     <el-input v-model="data.username" placeholder="请输入登录账号">
                         <template #prepend>
