@@ -1,4 +1,10 @@
 .el-popconfirm__main {
-    @apply border-b;
+    border-bottom: #eee solid 1px;
     padding-bottom: 10px;
+    margin-bottom: 4px;
+    height: 36px;
+}
+
+.el-popconfirm__action{
+    margin-top: 12px !important;
 }

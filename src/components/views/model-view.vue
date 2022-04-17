@@ -28,7 +28,7 @@
                 <div class="flex items-center justify-center space-x-1">
                     <el-button @click="onView(scope.row)" type="primary" size="small">查看</el-button>
                     <el-button @click="onEdit(scope.row)" type="primary" size="small">修改</el-button>
-                    <el-popconfirm @confirm="onDelete(scope)" title="删除后无法恢复，确定要删除吗？">
+                    <el-popconfirm @confirm="onDelete(scope)" title="删除后无法恢复，确定要删除吗？" cancel-button-type="default">
                         <template #reference>
                             <el-button :loading="cellStatus(scope,'delete')" type="danger" size="small">删除</el-button>
                         </template>
