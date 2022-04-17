@@ -40,4 +40,9 @@ export default {
         destroy: (data, config) => http.delete('admin_pages/' + data.id, config),
         show: (data, config) => http.get('admin_pages/' + data.id, config),
     },
+
+    route: {
+        list: (config) => http.get('admin_routes', config),
+        show: (data, config) => http.get('admin_routes/' + data.id, config),
+    },
 }
