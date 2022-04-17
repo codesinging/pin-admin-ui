@@ -102,7 +102,7 @@
 <script setup>
 import {Plus, Refresh} from "@icon-park/vue-next";
 import apis from "../../apis";
-import {computed, onMounted, provide, reactive, ref, toRefs} from "vue";
+import {computed, provide, reactive, ref, watch} from "vue";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../extend/extend-dialog.vue";
 import {warning} from "../../utils/message";
@@ -397,6 +397,11 @@ const onDelete = scope => {
 
 // 初始化列表数据
 refresh()
+
+// 监听页码变化
+if (pageable) {
+    watch(() => lister.value.page, page => refresh())
+}
 
 // 常用方法供给子组件
 provide('update', update)

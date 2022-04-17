@@ -76,7 +76,7 @@
 import {Refresh} from "@icon-park/vue-next";
 import {useStatus} from "../../states/status";
 import apis from "../../apis";
-import {computed, reactive, ref} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import StatusColumn from "../columns/status-column.vue";
 import ExtendDialog from "../extend/extend-dialog.vue";
 import ExtendDescriptions from "../extend/extend-descriptions.vue";
@@ -229,6 +229,11 @@ const onView = row => {
 
 // 初始化列表数据
 refresh()
+
+// 监听页码变化
+if (pageable) {
+    watch(() => lister.value.page, page => refresh())
+}
 </script>
 
 <style scoped>
