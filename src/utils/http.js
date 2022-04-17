@@ -3,8 +3,6 @@ import message from "./message"
 import httpConfig from "../config/http"
 import {useAuth} from "../states/auth";
 import {useStatus} from "../states/status";
-import {authConfig} from "../config";
-import router from "../router";
 
 // 默认请求标记
 const defaultLabel = 'loading'
@@ -120,6 +118,8 @@ const handle = (request, config) => {
 
             if (status === 401) {
                 showError('授权令牌失效，请重新登录')
+                const auth = useAuth()
+                auth.logout()
             }
 
             if (config.catch) {
