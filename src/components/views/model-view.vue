@@ -17,10 +17,11 @@
         <slot name="table-columns"></slot>
 
         <input-number-column v-if="showSortColumn" label="排列序号" prop="sort"></input-number-column>
-        <switch-column v-if="showStatusColumn" label="状态" prop="status"></switch-column>
 
         <el-table-column v-if="showCreatedAtColumn" label="创建时间" prop="created_at" align="center" width="170"></el-table-column>
         <el-table-column v-if="showUpdatedAtColumn" label="修改时间" prop="updated_at" align="center" width="170"></el-table-column>
+
+        <switch-column v-if="showStatusColumn" label="状态" prop="status"></switch-column>
 
         <el-table-column v-if="showActionColumn" label="操作" align="center" :width="actionColumnWidth">
             <template #default="scope">
