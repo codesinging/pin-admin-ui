@@ -54,7 +54,7 @@
         :loading="status.status.show"
     >
         <el-form ref="form" :model="formData" label-position="top" v-bind="formAttributes" @keyup.enter="onSubmit">
-            <slot name="form-items" :data="formData" :list="tableData"></slot>
+            <slot name="form-items" :data="formData" :list="tableData" :isEdit="isEdit"></slot>
         </el-form>
 
         <template #actions>
@@ -296,6 +296,9 @@ const editDialog = reactive({
 // 当前编辑表单数据
 const formData = ref({})
 
+// 是否编辑模式
+const isEdit = computed(() => !!formData.value['id'])
+
 // 编辑表单引用
 const form = ref()
 
@@ -305,7 +308,7 @@ const onSubmit = () => {
         if (valid) {
             const data = formData.value
 
-            const request = data['id']
+            const request = isEdit.value
                 ? api.update(data, 'submit')
                 : api.store(data, 'submit')
 
