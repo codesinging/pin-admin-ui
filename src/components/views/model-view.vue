@@ -407,6 +407,7 @@ if (pageable) {
 }
 
 // 常用方法供给子组件
+provide('refresh', refresh)
 provide('update', update)
 provide('cellLabel', cellLabel)
 provide('cellStatus', cellStatus)
