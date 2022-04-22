@@ -34,13 +34,12 @@
 import {reactive, ref} from "vue"
 import {useStatus} from "../states/status"
 import apis from "../apis"
-import {useAuth} from "../states/auth"
 import {useRouter} from "vue-router";
 import {appConfig} from "../config";
 import {warning} from "../utils/message";
+import auth from "../utils/auth";
 
 const status = useStatus()
-const auth = useAuth()
 const router = useRouter()
 
 const data = reactive({

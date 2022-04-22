@@ -2,7 +2,7 @@ import {createRouter, createWebHashHistory} from "vue-router"
 import guests from './guests'
 import routes from "~pages"
 import {appConfig, authConfig} from "../config"
-import {useAuth} from "../states/auth";
+import auth from "../utils/auth"
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -16,8 +16,6 @@ router.beforeEach((to, from, next) => {
         if (guests.includes(to.path)){
             next()
         } else {
-            const auth = useAuth()
-
             auth.check().then(()=>{
                 next()
             }).catch(()=> {

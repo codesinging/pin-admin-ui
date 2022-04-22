@@ -30,7 +30,6 @@
 
 <script setup>
 import {useLayout} from "../../states/layout";
-import {useAuth} from "../../states/auth";
 import {useScreensaver} from "../../states/screensaver";
 import {useFullscreen} from "@vueuse/core";
 import {computed} from "vue";
@@ -39,9 +38,9 @@ import apis from "../../apis";
 import {useRouter} from "vue-router";
 import {authConfig} from "../../config";
 import {FullScreen, OffScreen, User} from "@icon-park/vue-next";
+import auth from "../../utils/auth";
 
 const layout = useLayout()
-const auth = useAuth()
 const screensaver = useScreensaver()
 const router = useRouter()
 
@@ -49,7 +48,7 @@ const {isFullscreen, toggle: toggleFullscreen} = useFullscreen()
 
 const pagePaths = computed(() => treePath(layout.menuTree, 'path', layout.activeMenu?.path))
 
-const user = computed(() => auth.user)
+const user = computed(() => auth.user())
 
 const logout = () => {
     screensaver.show('正在注销登录')
