@@ -17,11 +17,11 @@ export const useAuth = defineStore('auth', {
 
     actions: {
         setToken(token = null) {
-            this.token = persist.set('token', token)
+            this.token = persist.set('token', token, config.expire)
         },
 
         setUser(user = null) {
-            this.user = persist.set('user', user)
+            this.user = persist.set('user', user, config.expire)
         },
 
         updateExpire() {
