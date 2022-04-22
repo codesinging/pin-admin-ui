@@ -413,6 +413,7 @@ provide('cellStatus', cellStatus)
 
 // 常用方法暴露给父组件
 defineExpose({
+    refresh,
     update,
     cellLabel,
     cellStatus,
