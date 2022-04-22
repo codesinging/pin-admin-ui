@@ -113,13 +113,14 @@ const handle = (request, config) => {
 
             content = (status === null || status === undefined) ? '网络或服务器连接错误' : `[${status}]${content}`
 
-            showError(content, config)
-            showLog('http response error', detail)
-
             if (status === 401) {
                 showError('授权令牌失效，请重新登录')
                 auth.logout()
+            } else {
+                showError(content, config)
             }
+
+            showLog('http response error', detail)
 
             if (config.catch) {
                 reject(content)
