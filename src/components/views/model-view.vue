@@ -3,7 +3,16 @@
     <div class="flex justify-between">
         <div class="flex items-center space-x-2">
             <el-button v-if="showAddButton" @click="onAdd" type="primary" :icon="Plus">新增</el-button>
-            <el-button v-if="showRefreshButton" @click="refresh" :icon="Refresh" :loading="status.status.refresh">刷新</el-button>
+            <el-button v-if="showRefreshButton" @click="onRefresh" :icon="Refresh" :loading="status.status.refresh">刷新</el-button>
+        </div>
+
+        <div v-if="hasSearch" class="search-section flex items-center space-x-2">
+            <el-form :model="searchData" inline>
+                <slot name="search-form-items" :data="searchData"></slot>
+                <el-form-item>
+                    <el-button @click="search" type="primary">搜索</el-button>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 
@@ -102,7 +111,7 @@
 <script setup>
 import {Plus, Refresh} from "@icon-park/vue-next";
 import apis from "../../apis";
-import {computed, provide, reactive, ref, watch} from "vue";
+import {computed, provide, reactive, ref, useSlots, watch} from "vue";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../extend/extend-dialog.vue";
 import {warning} from "../../utils/message";
@@ -253,22 +262,25 @@ const cellLabel = (scope, action) => [scope.column.id, scope.$index, action].joi
 const cellStatus = (scope, action) => status.status[cellLabel(scope, action)]
 
 // 刷新列表数据
-const refresh = () => {
+const refresh = (params = {}) => {
     let config = {
         label: 'refresh',
     }
 
+    config.params = params
+
     if (pageable) {
-        config.params = {
-            page: lister.value.page,
-            size: lister.value.size,
-        }
+        config.params.page = lister.value.page
+        config.params.size = lister.value.size
     }
 
     api.list(config).then(res => {
         lister.value = toLister(res)
     })
 }
+
+// 点击刷新按钮
+const onRefresh = () => refresh()
 
 // 更新数据
 const update = (scope, action) => {
@@ -359,6 +371,27 @@ const onEdit = (row) => {
         })
     }
     showEditDialog('编辑')
+}
+
+// 所有插槽
+const slots = useSlots()
+
+// 是否有搜索插槽
+const hasSearch = computed(() => slots['search-form-items'] !== undefined)
+
+// 搜索关键词数据
+const searchData = ref({})
+
+// 是否含有搜索数据
+const hasSearchData = computed(() => Object.values(searchData.value).filter(item => item!=='').length > 0)
+
+// 搜索请求
+const search = () => {
+    if (hasSearchData.value){
+        refresh(searchData.value)
+    } else {
+        warning('请输入搜索条件')
+    }
 }
 
 // 查看对话框参数
