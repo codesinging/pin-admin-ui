@@ -15,6 +15,7 @@
             </el-table-column>
         </template>
 
+
         <template #form-items="{data, list}">
             <el-form-item label="上级菜单" prop="parent_id">
                 <el-select v-model="data.parent_id" placeholder="不选则做为顶级菜单" clearable class="w-full">
@@ -24,6 +25,10 @@
 
             <el-form-item label="菜单名称" prop="name" :rules="{required: true, message: '菜单名称不能为空'}">
                 <el-input v-model="data.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="图标">
+                <icon-select v-model="data.icon"></icon-select>
             </el-form-item>
 
             <el-form-item label="链接路径" prop="path">
@@ -40,14 +45,17 @@
             <el-descriptions-item label="链接网址">{{ data.url }}</el-descriptions-item>
         </template>
     </model-view>
+
 </template>
 
 <script setup>
 import ModelView from "../../components/views/model-view.vue";
 import {Check, Close} from "@icon-park/vue-next";
 import {ref} from "vue";
+import IconSelect from "../../components/form/icon-select.vue";
 
 const view = ref()
+
 </script>
 
 <style scoped>

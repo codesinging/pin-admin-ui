@@ -23,6 +23,9 @@ export default {
         update: (data, config) => http.put('admins/' + data.id, data, config),
         destroy: (data, config) => http.delete('admins/' + data.id, config),
         show: (data, config) => http.get('admins/' + data.id, config),
+
+        syncRoles: (data, config) => http.post(`admins/${data.id}/sync_roles`, data, config),
+        syncPermissions: (data, config) => http.post(`admins/${data.id}/sync_permissions`, data, config),
     },
 
     role: {
@@ -31,6 +34,8 @@ export default {
         update: (data, config) => http.put('admin_roles/' + data.id, data, config),
         destroy: (data, config) => http.delete('admin_roles/' + data.id, config),
         show: (data, config) => http.get('admin_roles/' + data.id, config),
+        permissions: (data, config) => http.get('admin_roles/' + data.id + '/permissions', config),
+        permission: (data, config) => http.post('admin_roles/' + data.id + '/permission', data, config),
     },
 
     page: {
