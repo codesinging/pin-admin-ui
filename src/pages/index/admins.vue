@@ -15,7 +15,7 @@
         </template>
 
         <template #action-buttons="{row}">
-            <el-button @click="showRoleDialog(row)" size="small" type="success">角色</el-button>
+            <el-button @click="showRoleDialog(row)" size="small" type="success" :disabled="row.super">角色</el-button>
         </template>
 
         <template #form-items="{data, isEdit}">
@@ -38,13 +38,19 @@
     </model-view>
 
     <extend-dialog v-model="roleDialog.visible" :loading="status.status.refreshRoles" title="角色设置">
-        <el-checkbox-group v-model="roleDialog.selectRoles">
-            <el-checkbox v-for="role in roles" :key="role.id" :label="role.id">{{ role.name }}</el-checkbox>
+        <div class="border-b mb-2">
+            <el-checkbox v-model="roleDialog.checkAll" :indeterminate="roleDialog.indeterminate" @change="onRoleCheckAll">全选</el-checkbox>
+        </div>
+
+        <el-checkbox-group v-model="roleDialog.selectedRoles">
+            <div class="grid grid-cols-2">
+                <el-checkbox v-for="role in roleDialog.roles" :key="role.id" :label="role.id">{{ role.name }} <span class="text-xs text-gray-400">{{ role.description }}</span></el-checkbox>
+            </div>
         </el-checkbox-group>
 
         <template #actions>
             <el-button @click="closeRoleDialog">取消</el-button>
-            <el-button @click="assignRoles" type="primary" :loading="status.status.syncRoles">确定</el-button>
+            <el-button @click="submitRoles" type="primary" :loading="status.status.submitRoles">确定</el-button>
         </template>
     </extend-dialog>
 </template>
@@ -52,51 +58,86 @@
 <script setup>
 import ModelView from "../../components/views/model-view.vue";
 import StatusColumn from "../../components/columns/status-column.vue";
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import apis from "../../apis";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../../components/extend/extend-dialog.vue";
 
 const status = useStatus()
 
-const roles = ref([])
-
 const view = ref()
-
-const refreshRoles = () => {
-    apis.role.list({params: {status: true}, status: 'refreshRoles'}).then(res => {
-        roles.value = res
-    })
-}
 
 const roleDialog = reactive({
     visible: false,
     row: null,
-    selectRoles: [],
+    roles: [],
+    selectedRoles: [],
+    checkAll: false,
+    indeterminate: false,
 })
 
 const showRoleDialog = (row) => {
     refreshRoles()
     roleDialog.visible = true
     roleDialog.row = row
-    roleDialog.selectRoles = row.roles.map(item => item.id)
+    roleDialog.selectedRoles = row.roles.map(item => item.id)
 }
 
 const closeRoleDialog = () => {
     roleDialog.visible = false
     roleDialog.row = null
-    roleDialog.selectRoles = []
+    roleDialog.selectedRoles = []
+    roleDialog.checkAll = false
+    roleDialog.indeterminate = false
 }
 
-const assignRoles = () => {
-    apis.admin.syncRoles({
+const refreshRoles = () => {
+    apis.role.list({params: {status: true}, label: 'refreshRoles'}).then(res => {
+        roleDialog.roles = res
+        setRoleStatus()
+    })
+}
+
+const submitRoles = () => {
+    apis.admin.role({
         id: roleDialog.row.id,
-        roles: roleDialog.selectRoles,
-    }, 'syncRoles').then(res => {
+        roles: roleDialog.selectedRoles,
+    }, 'submitRoles').then(res => {
         closeRoleDialog()
         view.value.refresh()
     })
 }
+
+const onRoleCheckAll = () => {
+    roleDialog.indeterminate = false
+
+    if (roleDialog.checkAll) {
+        roleDialog.roles.forEach(role => {
+            if (!roleDialog.selectedRoles.includes(role.id)) {
+                roleDialog.selectedRoles.push(role.id)
+            }
+        })
+    } else {
+        roleDialog.roles.forEach(role => {
+            let index = roleDialog.selectedRoles.findIndex(id => id === role.id)
+            if (index >= 0) {
+                roleDialog.selectedRoles.splice(index, 1)
+            }
+        })
+    }
+}
+
+const setRoleStatus = () => {
+    let selectedCount = roleDialog.selectedRoles.length
+    let totalCount = roleDialog.roles.length
+
+    roleDialog.checkAll = selectedCount > 0 && selectedCount === totalCount
+    roleDialog.indeterminate = selectedCount > 0 && selectedCount < totalCount
+}
+
+watch(() => roleDialog.selectedRoles, () => {
+    setRoleStatus()
+})
 </script>
 
 <style scoped>

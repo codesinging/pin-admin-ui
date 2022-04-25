@@ -24,8 +24,8 @@ export default {
         destroy: (data, config) => http.delete('admins/' + data.id, config),
         show: (data, config) => http.get('admins/' + data.id, config),
 
-        syncRoles: (data, config) => http.post(`admins/${data.id}/sync_roles`, data, config),
-        syncPermissions: (data, config) => http.post(`admins/${data.id}/sync_permissions`, data, config),
+        role: (data, config) => http.post(`admins/${data.id}/role`, data, config),
+        permission: (data, config) => http.post(`admins/${data.id}/permission`, data, config),
     },
 
     role: {
