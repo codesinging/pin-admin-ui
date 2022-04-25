@@ -45,11 +45,18 @@
                             <el-checkbox v-model="permissionDialog.menuCheckAll" :indeterminate="permissionDialog.menuIndeterminate" @change="onMenuCheckAll">全选</el-checkbox>
                         </div>
                     </template>
-                    <el-checkbox-group v-model="permissionDialog.selectedPermissions">
-                        <div class="grid grid-cols-2">
-                            <el-checkbox v-for="menu in permissionDialog.menus" :key="menu.id" :label="menu.permission_id">{{ menu.name }} ({{ menu.path }})</el-checkbox>
-                        </div>
-                    </el-checkbox-group>
+                    <div class="space-y-2">
+                        <el-checkbox-group v-model="permissionDialog.selectedPermissions">
+                            <div v-for="menu in permissionDialog.menusTree" :key="menu.id">
+                                <div class="border-b py-1">
+                                    <el-checkbox :label="menu.permission_id">{{ menu.name }} ({{ menu.path }})</el-checkbox>
+                                </div>
+                                <div class="grid grid-cols-2 pt-2 pl-6">
+                                    <el-checkbox v-for="subMenu in menu.children" :key="subMenu.id" :label="subMenu.permission_id" @change="onSubMenuCheck(subMenu, menu)">{{ subMenu.name }} ({{ subMenu.path }})</el-checkbox>
+                                </div>
+                            </div>
+                        </el-checkbox-group>
+                    </div>
                 </el-card>
             </el-tab-pane>
             <el-tab-pane name="route" label="路由权限">
@@ -97,6 +104,7 @@ const permissionDialog = reactive({
     tab: 'page',
     pages: null,
     menus: null,
+    menusTree: null,
     routes: null,
     routeGroups: null,
     selectedPermissions: [],
@@ -175,10 +183,21 @@ const refreshPages = () => {
 const refreshMenus = () => {
     if (permissionDialog.menus === null) {
         apis.menu.list({params: {status: 1}, label: 'refreshMenus'}).then(res => {
-            permissionDialog.menus = res
+            permissionDialog.menusTree = res
+            permissionDialog.menus = initMenus(res)
             setMenuStatus()
         })
     }
+}
+
+const initMenus = tree => {
+    let menus = []
+    tree.forEach(item => {
+        menus.push(item)
+        menus.push(...initMenus(item.children))
+    })
+
+    return menus
 }
 
 const refreshRoutes = () => {
@@ -214,7 +233,7 @@ const initRoutes = routes => {
 
 const onPageCheckAll = () => {
     permissionDialog.pageIndeterminate = false
-    if (permissionDialog.pageCheckAll){
+    if (permissionDialog.pageCheckAll) {
         addSelectedPermissions(permissionDialog.pages)
     } else {
         removeSelectedPermissions(permissionDialog.pages)
@@ -233,7 +252,7 @@ const setPageStatus = () => {
 
 const onMenuCheckAll = () => {
     permissionDialog.menuIndeterminate = false
-    if (permissionDialog.menuCheckAll){
+    if (permissionDialog.menuCheckAll) {
         addSelectedPermissions(permissionDialog.menus)
     } else {
         removeSelectedPermissions(permissionDialog.menus)
@@ -250,9 +269,21 @@ const setMenuStatus = () => {
     }
 }
 
+const onSubMenuCheck = (subMenu, menu) => {
+    let checked = permissionDialog.selectedPermissions.includes(subMenu.permission_id)
+    if (checked) {
+        addSelectedPermissions([menu])
+    } else {
+        let count = menu.children.filter(item => permissionDialog.selectedPermissions.includes(item.permission_id)).length
+        if (count === 0) {
+            removeSelectedPermissions([menu])
+        }
+    }
+}
+
 const onRouteGroupCheckAll = group => {
     group.indeterminate = false
-    if (group.checkAll){
+    if (group.checkAll) {
         addSelectedPermissions(group.children)
     } else {
         removeSelectedPermissions(group.children)
