@@ -33,6 +33,7 @@ const select = index => {
     const menu = menus.value.find(item => item.id === index)
     layout.addTab(menu)
     layout.setActiveMenu(menu)
+    layout.setActiveTab(menu)
 }
 </script>
 

@@ -18,7 +18,6 @@
 <script setup>
 import Screensaver from "../components/layout/screensaver.vue";
 import {useScreensaver} from "../states/screensaver";
-import apis from "../apis";
 import LayoutBrand from "../components/layout/layout-brand.vue";
 import LayoutMenu from "../components/layout/layout-menu.vue";
 import LayoutCollapse from "../components/layout/layout-collapse.vue";
@@ -34,28 +33,13 @@ const router = useRouter()
 
 screensaver.show('数据加载中')
 
-apis.auth.menus({label: 'menu', message: false, catch: true}).then(res => {
-    const menus = res || []
-    menus.forEach(item => {
-        item.id = item.id.toString()
-        if (item.parent_id) {
-            item.parent_id = item.parent_id.toString()
-        }
-    })
-
-    layout.setMenus(menus)
-
-    const currentPath = router.currentRoute.value.path
-    const currentMenu = menus.find(item => '/' + item.path === currentPath)
-
-    layout.addTab(layout.homeMenu)
-    layout.addTab(currentMenu)
-    layout.setActiveMenu(currentMenu||layout.homeMenu)
-
-    screensaver.hide()
+layout.init().then(() => {
+    layout.setCurrentPath(router.currentRoute.value.path)
+    screensaver.hide(500)
 }).catch(() => {
-    screensaver.hide()
+    screensaver.hide(500)
 })
+
 </script>
 
 <style scoped>

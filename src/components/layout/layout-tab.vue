@@ -1,8 +1,8 @@
 <template>
     <div v-if="tabs.length > 0" class="flex px-4 mt-4">
         <div class="flex-1 overflow-hidden layout-tab">
-            <el-tabs v-model="activeTabId" type="card" @tab-remove="onTabRemove">
-                <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.name" :name="tab.id" :closable="!tab.default"></el-tab-pane>
+            <el-tabs v-model="activeTabPath" type="card" @tab-remove="onTabRemove">
+                <el-tab-pane v-for="(tab,index) in tabs" :key="index" :label="tab.name" :name="tab.path" :closable="!tab.default"></el-tab-pane>
             </el-tabs>
         </div>
         <div v-if="tabs.length>2" class="w-10 flex-shrink-0 border-b flex items-center justify-end">
@@ -44,28 +44,29 @@ const layout = useLayout()
 const router = useRouter()
 
 const tabs = computed(() => layout.tabs)
-const activeTab = computed(() => layout.activeMenu)
-const activeTabId = ref(layout.activeMenu?.id)
+const menus = computed(() => layout.menus)
+const activeTab = computed(() => layout.activeTab)
+const activeTabPath = ref(layout.activeTab?.path)
 
 const removeTab = tab => {
-    if (tab.id === layout.homeMenu.id) {
+    if (tab.path === layout.homeTab.path) {
         return false
     }
 
-    let index = tabs.value.findIndex(item => item.id === tab.id)
+    let index = tabs.value.findIndex(item => item.path === tab.path)
     tabs.value.splice(index, 1)
-    if (tab.id === activeTabId.value) {
+    if (tab.path === activeTabPath.value) {
         const nextTab = tabs.value[index] || tabs.value[tabs.value.length - 1]
-        activeTabId.value = nextTab.id
+        activeTabPath.value = nextTab.path
     }
 }
 
-const onTabRemove = id => {
-    removeTab(tabs.value.find(tab => tab.id === id))
+const onTabRemove = path => {
+    removeTab(tabs.value.find(tab => tab.path === path))
 }
 
 const onTabCommand = command => {
-    let activeIndex = tabs.value.findIndex(tab => tab.id === activeTabId.value)
+    let activeIndex = tabs.value.findIndex(tab => tab.path === activeTabPath.value)
     let removingTabs = []
     switch (command) {
         case 'left':
@@ -78,7 +79,7 @@ const onTabCommand = command => {
             removingTabs = tabs.value.filter((item, index) => index !== activeIndex)
             break
         case 'all':
-            removingTabs = tabs.value.filter(item => item.id !== layout.homeMenu.id)
+            removingTabs = tabs.value.filter(item => item.path !== layout.homeTab.path)
             break
     }
 
@@ -94,14 +95,14 @@ const go = path => {
     router.push(path)
 }
 
-watch(activeTabId, id => {
-    const tab = tabs.value.find(tab => tab.id === id)
-    layout.setActiveMenu(tab)
-    go(tab.path)
+watch(activeTabPath, path => {
+    const menu = menus.value.find(menu => menu.path === path)
+    layout.setActiveMenu(menu)
+    go(path)
 })
 
 watch(activeTab, tab => {
-    activeTabId.value = tab.id
+    activeTabPath.value = tab.path
 })
 </script>
 

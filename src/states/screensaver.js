@@ -12,9 +12,11 @@ export const useScreensaver = defineStore('screensaver', {
             this.text = text
         },
 
-        hide() {
-            this.visible = false
-            this.text = ''
+        hide(timeout = 0) {
+            setTimeout(() => {
+                this.visible = false
+                this.text = ''
+            }, timeout)
         }
     },
 })

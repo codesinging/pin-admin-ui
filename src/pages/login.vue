@@ -38,9 +38,11 @@ import {useRouter} from "vue-router";
 import {appConfig} from "../config";
 import {warning} from "../utils/message";
 import auth from "../utils/auth";
+import {useLayout} from "../states/layout";
 
 const status = useStatus()
 const router = useRouter()
+const layout = useLayout()
 
 const data = reactive({
     username: import.meta.env.VITE_ADMIN_USERNAME,
@@ -59,8 +61,13 @@ const submit = () => {
         if (valid) {
             apis.auth.login(data, {label: 'submit', success: false}).then(res => {
                 auth.login(res.token, res.admin)
-                status.set('redirect')
-                router.push(appConfig.home).then(() => status.unset('redirect'))
+
+                layout.init().then(() => {
+                    status.set('redirect')
+                    router.push(appConfig.home).then(() => status.unset('redirect'))
+                }).catch(() => {
+                    console.log('获取页面失败')
+                })
             })
         } else {
             warning('表单验证未通过，请重新填写')

@@ -3,7 +3,8 @@
         <el-scrollbar>
             <router-view v-slot="{Component}">
                 <keep-alive>
-                    <component :is="Component"></component>
+                    <component v-if="permitted" :is="Component"></component>
+                    <page403 v-else>{{ route.path }}</page403>
                 </keep-alive>
             </router-view>
         </el-scrollbar>
@@ -11,6 +12,16 @@
 </template>
 
 <script setup>
+import {useRoute} from "vue-router";
+import {computed} from "vue";
+import Page403 from '../../components/layout/page-403.vue'
+import {useLayout} from "../../states/layout";
+
+const route = useRoute()
+
+const layout = useLayout()
+
+const permitted = computed(() => layout.pageList.includes(route.path))
 
 </script>
 
