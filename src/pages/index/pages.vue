@@ -1,5 +1,5 @@
 <template>
-    <model-view model="page" show-sort-column show-status-column>
+    <model-view resource="admin_pages" show-sort-column show-status-column>
         <template #table-columns>
             <el-table-column label="路径" prop="path"></el-table-column>
         </template>

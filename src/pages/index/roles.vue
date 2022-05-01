@@ -1,5 +1,5 @@
 <template>
-    <model-view model="role" show-status-column show-sort-column action-column-width="240">
+    <model-view resource="admin_roles" show-status-column show-sort-column action-column-width="240">
         <template #table-columns>
             <el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
         </template>
@@ -93,8 +93,8 @@
 import ModelView from "../../components/views/model-view.vue";
 import {computed, reactive, watch} from "vue";
 import ExtendDialog from "../../components/extend/extend-dialog.vue";
-import apis from "../../apis";
 import {useStatus} from "../../states/status";
+import api from "../../utils/api";
 
 const status = useStatus()
 
@@ -160,20 +160,20 @@ const submitPermissions = () => {
         id: permissionDialog.row.id,
         permissions: permissionDialog.selectedPermissions,
     }
-    apis.role.permission(data, 'permission').then(res => {
+    api().post(['admin_roles', data.id, 'permission'],data, 'permission').then(res => {
         closePermissionDialog()
     })
 }
 
 const refreshPermissions = row => {
-    apis.role.permissions({id: row.id}, 'refreshPermissions').then(res => {
+    api().get(['admin_roles', row.id, 'permission'], 'refreshPermissions').then(res => {
         permissionDialog.selectedPermissions = res.map(item => item.id)
     })
 }
 
 const refreshPages = () => {
     if (permissionDialog.pages === null) {
-        apis.page.list({params: {status: 1}, label: 'refreshPages'}).then(res => {
+        api().get('admin_pages', {params: {status: 1}, label: 'refreshPages'}).then(res => {
             permissionDialog.pages = res
             setPageStatus()
         })

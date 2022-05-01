@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {listToTree} from "../utils/tree";
-import apis from "../apis";
+import api from "../utils/api";
 
 export const useLayout  = defineStore('layout', {
     state: () => ({
@@ -74,8 +74,8 @@ export const useLayout  = defineStore('layout', {
                     resolve()
                 } else {
                     Promise.all([
-                        apis.auth.menus({label: 'refreshAuthMenus', catch: true}),
-                        apis.auth.pages({label: 'refreshAuthPages', catch: true}),
+                        api().get('auth/menus', {label: 'refreshAuthMenus', catch: true}),
+                        api().get('auth/pages', {label: 'refreshAuthPages', catch: true}),
                     ]).then(res => {
                         this.setMenus(res[0])
                         this.setPages(res[1])

@@ -110,7 +110,6 @@
 
 <script setup>
 import {Plus, Refresh} from "@icon-park/vue-next";
-import apis from "../../apis";
 import {computed, provide, reactive, ref, useSlots, watch} from "vue";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../extend/extend-dialog.vue";
@@ -118,14 +117,15 @@ import {warning} from "../../utils/message";
 import ExtendDescriptions from "../extend/extend-descriptions.vue";
 import SwitchColumn from "../columns/switch-column.vue";
 import InputNumberColumn from "../columns/input-number-column.vue";
+import api from "../../utils/api";
 
 // 请求状态
 const status = useStatus()
 
 // 组件属性
 const props = defineProps({
-    // 模型名
-    model: {
+    // 接口资源名
+    resource: {
         type: String,
         required: true,
     },
@@ -235,7 +235,7 @@ const props = defineProps({
 
 // 解构一些常用属性
 const {
-    model,
+    resource,
     pageable,
     pageSize,
     formDefault,
@@ -244,7 +244,7 @@ const {
 } = props
 
 // 当前模型的 api 接口
-const api = apis[model]
+const apis = api(resource)
 
 // 列表
 const lister = ref(pageable ? {page: 1, size: pageSize, data: [], total: 0} : {page: 0, data: [], total: 0})
@@ -274,7 +274,7 @@ const refresh = (params = {}) => {
         config.params.size = lister.value.size
     }
 
-    api.list(config).then(res => {
+    apis.list(config).then(res => {
         lister.value = toLister(res)
     })
 }
@@ -284,14 +284,14 @@ const onRefresh = () => refresh()
 
 // 更新数据
 const update = (scope, action) => {
-    api.update(scope.row, cellLabel(scope, action)).then(() => {
+    apis.update(scope.row, cellLabel(scope, action)).then(() => {
         refresh()
     })
 }
 
 // 删除数据
 const destroy = (scope, action) => {
-    api.destroy(scope.row, cellLabel(scope, action)).then(() => {
+    apis.destroy(scope.row, cellLabel(scope, action)).then(() => {
         refresh()
     })
 }
@@ -321,8 +321,8 @@ const onSubmit = () => {
             const data = formData.value
 
             const request = isEdit.value
-                ? api.update(data, 'submit')
-                : api.store(data, 'submit')
+                ? apis.update(data, 'submit')
+                : apis.store(data, 'submit')
 
             request.then(res => {
                 closeEditDialog()
@@ -366,7 +366,7 @@ const onAdd = () => {
 const onEdit = (row) => {
     formData.value = Object.assign({}, row)
     if (refreshEditData) {
-        api.show(row, {label: 'show', message: false}).then(res => {
+        apis.show(row, {label: 'show', message: false}).then(res => {
             formData.value = res
         })
     }
@@ -419,7 +419,7 @@ const viewDataTab = ref('common')
 const onView = row => {
     viewData.value = row
     if (refreshViewData) {
-        api.show(row, {label: 'show', message: false}).then(res => {
+        apis.show(row, {label: 'show', message: false}).then(res => {
             viewData.value = res
         })
     }

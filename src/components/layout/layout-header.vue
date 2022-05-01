@@ -34,11 +34,11 @@ import {useScreensaver} from "../../states/screensaver";
 import {useFullscreen} from "@vueuse/core";
 import {computed} from "vue";
 import {treePath} from "../../utils/tree";
-import apis from "../../apis";
 import {useRouter} from "vue-router";
 import {authConfig} from "../../config";
 import {FullScreen, OffScreen, User} from "@icon-park/vue-next";
 import auth from "../../utils/auth";
+import api from "../../utils/api";
 
 const layout = useLayout()
 const screensaver = useScreensaver()
@@ -53,7 +53,7 @@ const user = computed(() => auth.user())
 const logout = () => {
     screensaver.show('正在注销登录')
 
-    apis.auth.logout({}, {catch: true}).finally(() => {
+    api().post('auth/logout', {}, {catch: true}).finally(() => {
         auth.logout()
         layout.clear()
         router.push(authConfig.login).then(() => screensaver.hide())

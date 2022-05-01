@@ -75,18 +75,19 @@
 <script setup>
 import {Refresh} from "@icon-park/vue-next";
 import {useStatus} from "../../states/status";
-import apis from "../../apis";
 import {computed, reactive, ref, watch} from "vue";
 import StatusColumn from "../columns/status-column.vue";
 import ExtendDialog from "../extend/extend-dialog.vue";
 import ExtendDescriptions from "../extend/extend-descriptions.vue";
+import api from "../../utils/api";
 
 // 请求状态
 const status = useStatus()
 
 // 组件属性
 const props = defineProps({
-    model: {
+    // 接口资源
+    resource: {
         type: String,
         required: true,
     },
@@ -159,14 +160,14 @@ const props = defineProps({
 })
 
 const {
-    model,
+    resource,
     pageable,
     pageSize,
     refreshViewData,
 } = props
 
 // 当前模型的 api 接口
-const api = apis[model]
+const apis = api(resource)
 
 // 列表
 const lister = ref(pageable ? {page: 1, size: pageSize, data: [], total: 0} : {page: 0, data: [], total: 0})
@@ -190,7 +191,7 @@ const refresh = () => {
         }
     }
 
-    api.list(config).then(res => {
+    apis.list(config).then(res => {
         lister.value = toLister(res)
     })
 }
@@ -220,7 +221,7 @@ const viewDataTab = ref('common')
 const onView = row => {
     viewData.value = row
     if (refreshViewData) {
-        api.show(row, {label: 'show', message: false}).then(res => {
+        apis.show(row, {label: 'show', message: false}).then(res => {
             viewData.value = res
         })
     }

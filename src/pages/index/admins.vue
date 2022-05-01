@@ -1,5 +1,5 @@
 <template>
-    <model-view ref="view" model="admin" show-status-column action-column-width="260">
+    <model-view ref="view" resource="admins" show-status-column action-column-width="260">
         <template #table-columns>
             <el-table-column label="登录账号" prop="username"></el-table-column>
 
@@ -59,9 +59,9 @@
 import ModelView from "../../components/views/model-view.vue";
 import StatusColumn from "../../components/columns/status-column.vue";
 import {reactive, ref, watch} from "vue";
-import apis from "../../apis";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../../components/extend/extend-dialog.vue";
+import api from "../../utils/api";
 
 const status = useStatus()
 
@@ -92,15 +92,14 @@ const closeRoleDialog = () => {
 }
 
 const refreshRoles = () => {
-    apis.role.list({params: {status: true}, label: 'refreshRoles'}).then(res => {
+    api().get('admin_roles', {params: {status: true}, label: 'refreshRoles'}).then(res => {
         roleDialog.roles = res
         setRoleStatus()
     })
 }
 
 const submitRoles = () => {
-    apis.admin.role({
-        id: roleDialog.row.id,
+    api().post(['admin', roleDialog.row.id, 'role'], {
         roles: roleDialog.selectedRoles,
     }, 'submitRoles').then(res => {
         closeRoleDialog()

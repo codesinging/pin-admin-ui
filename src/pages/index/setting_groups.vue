@@ -1,5 +1,5 @@
 <template>
-    <model-view model="settingGroup" show-sort-column show-status-column>
+    <model-view resource="setting_groups" show-sort-column show-status-column>
         <template #table-columns>
             <el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
         </template>

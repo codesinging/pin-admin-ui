@@ -33,12 +33,12 @@
 <script setup>
 import {reactive, ref} from "vue"
 import {useStatus} from "../states/status"
-import apis from "../apis"
 import {useRouter} from "vue-router";
 import {appConfig} from "../config";
 import {warning} from "../utils/message";
 import auth from "../utils/auth";
 import {useLayout} from "../states/layout";
+import api from "../utils/api";
 
 const status = useStatus()
 const router = useRouter()
@@ -59,7 +59,7 @@ const form = ref()
 const submit = () => {
     form.value.validate(valid => {
         if (valid) {
-            apis.auth.login(data, {label: 'submit', success: false}).then(res => {
+            api().post('auth/login', data, {label: 'submit', success: false}).then(res => {
                 auth.login(res.token, res.admin)
 
                 layout.init().then(() => {
