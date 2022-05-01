@@ -50,4 +50,12 @@ export default {
         list: (config) => http.get('admin_routes', config),
         show: (data, config) => http.get('admin_routes/' + data.id, config),
     },
+
+    settingGroup: {
+        list: (config) => http.get('setting_groups', config),
+        store: (data, config) => http.post('setting_groups', data, config),
+        update: (data, config) => http.put('setting_groups/' + data.id, data, config),
+        destroy: (data, config) => http.delete('setting_groups/' + data.id, config),
+        show: (data, config) => http.get('setting_groups/' + data.id, config),
+    },
 }
