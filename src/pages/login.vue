@@ -39,6 +39,7 @@ import {warning} from "../utils/message";
 import auth from "../utils/auth";
 import {useLayout} from "../states/layout";
 import api from "../utils/api";
+import model from "../utils/model";
 
 const status = useStatus()
 const router = useRouter()
@@ -59,7 +60,7 @@ const form = ref()
 const submit = () => {
     form.value.validate(valid => {
         if (valid) {
-            api().post('auth/login', data, {label: 'submit', success: false}).then(res => {
+            model('auth/login').label('submit').catch().post(data).then(res=>{
                 auth.login(res.token, res.admin)
 
                 layout.init().then(() => {
