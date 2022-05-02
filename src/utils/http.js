@@ -46,8 +46,8 @@ const showLog = (title, content) => {
  * @param config
  */
 const showSuccess = (content, config) => {
-    if (config.message !== false && (config.message || config.success)) {
-        message.success((typeof config.success === 'string' ? config.success : content) || '操作成功')
+    if (config.showMessage !== false && config.showSuccess !==false) {
+        message.success(config.successMessage || content || '操作成功')
     }
 }
 
@@ -59,8 +59,8 @@ const showSuccess = (content, config) => {
 const showError = (content, config) => {
     if (!config) {
         message.error(content)
-    } else if (config.message !== false && (config.message || config.error)) {
-        message.error(typeof config.error === 'string' ? config.error : content)
+    } else if (config.showMessage !== false && config.showError!==false) {
+        message.error(config.errorMessage || content || '操作失败')
     }
 }
 
@@ -72,9 +72,9 @@ const showError = (content, config) => {
 const initConfig = config => {
     config = typeof config === 'string' ? {label: config} : config
 
-    config.message = config.message ?? true
-    config.success = config.success ?? true
-    config.error = config.error ?? true
+    config.showMessage = config.showMessage ?? true
+    config.showSuccess = config.showSuccess ?? true
+    config.showError = config.showError ?? true
     config.catch = config.catch ?? false
 
     setStatus(config.label)
@@ -100,7 +100,7 @@ const handle = (request, config) => {
                 let error = `[${res.data?.code}]${res.data.message || res.statusText || '请求响应结果错误'}`
 
                 showError(error, config)
-                showLog('http response status error', error)
+                showLog('[900100]http response status error', error)
 
                 if (config.catch) {
                     reject(error)
@@ -108,9 +108,9 @@ const handle = (request, config) => {
             }
         }).catch(error => {
             let status = error.response?.status || error.status
-            let content = error.response?.data?.message || error.response?.message || error.message || '请求响应错误'
             let detail = error.response || error.toJSON()
 
+            let content = error.response?.data?.message || error.response?.message || error.message || '请求响应错误'
             content = (status === null || status === undefined) ? '网络或服务器连接错误' : `[${status}]${content}`
 
             if (status === 401) {
@@ -120,7 +120,7 @@ const handle = (request, config) => {
                 showError(content, config)
             }
 
-            showLog('http response error', detail)
+            showLog('[900101]http response error', detail)
 
             if (config.catch) {
                 reject(content)
