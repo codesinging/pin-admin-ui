@@ -60,7 +60,7 @@
         @close="onEditDialogClosed"
         :title="editDialog.title"
         :close-on-click-modal="false"
-        :loading="status.status.show"
+        :loading="status.status.show||status.status[editDialog.label]"
     >
         <el-form ref="form" :model="formData" label-position="top" v-bind="formAttributes" @keyup.enter="onSubmit">
             <slot name="form-items" :data="formData" :list="tableData" :isEdit="isEdit"></slot>
@@ -77,7 +77,7 @@
         v-model="viewDialog.visible"
         :title="viewDialog.title"
         :close-on-click-modal="false"
-        :loading="status.status.show"
+        :loading="status.status.show||status.status[viewDialog.label]"
     >
 
         <el-tabs type="card" v-model="viewDataTab">
@@ -246,6 +246,9 @@ const {
 // 当前模型的 api 接口
 const apis = api(resource)
 
+// 事件
+const emits = defineEmits(['onEditDialogOpen', 'onViewDialogOpen'])
+
 // 列表
 const lister = ref(pageable ? {page: 1, size: pageSize, data: [], total: 0} : {page: 0, data: [], total: 0})
 
@@ -303,6 +306,7 @@ const editDialog = reactive({
     top: 15,
     fullscreen: false,
     title: '编辑',
+    label: 'editDialog'
 })
 
 // 当前编辑表单数据
@@ -338,6 +342,7 @@ const onSubmit = () => {
 const showEditDialog = (title) => {
     editDialog.title = title
     editDialog.visible = true
+    emits('onEditDialogOpen', isEdit.value)
 }
 
 // 关闭编辑对话框
@@ -350,6 +355,9 @@ const closeEditDialog = () => {
 const onEditDialogClosed = () => {
     form.value.clearValidate()
 }
+
+// 编辑对话框加载标记
+const editDialogLabel = () => editDialog.label
 
 // 点击取消按钮
 const onCancel = () => {
@@ -383,11 +391,11 @@ const hasSearch = computed(() => slots['search-form-items'] !== undefined)
 const searchData = ref({})
 
 // 是否含有搜索数据
-const hasSearchData = computed(() => Object.values(searchData.value).filter(item => item!=='').length > 0)
+const hasSearchData = computed(() => Object.values(searchData.value).filter(item => item !== '').length > 0)
 
 // 搜索请求
 const search = () => {
-    if (hasSearchData.value){
+    if (hasSearchData.value) {
         refresh(searchData.value)
     } else {
         warning('请输入搜索条件')
@@ -401,13 +409,20 @@ const viewDialog = reactive({
     top: 15,
     fullscreen: false,
     title: '查看详情',
+    label: 'viewDialog',
 })
 
 // 打开查看对话框
-const showViewDialog = () => viewDialog.visible = true
+const showViewDialog = () => {
+    viewDialog.visible = true
+    emits('onViewDialogOpen')
+}
 
 // 关闭查看对话框
 const closeViewDialog = () => viewDialog.visible = false
+
+// 编辑对话框加载标记
+const viewDialogLabel = () => viewDialog.label
 
 // 查看详情数据
 const viewData = ref({})
@@ -451,6 +466,8 @@ defineExpose({
     update,
     cellLabel,
     cellStatus,
+    editDialogLabel,
+    viewDialogLabel,
 })
 
 </script>
