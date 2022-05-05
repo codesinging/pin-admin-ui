@@ -221,10 +221,16 @@ const props = defineProps({
     },
 
     // 编辑表单默认数据
-    formDefaults: Object,
+    formDefaults: {
+        type: Object,
+        default: () => ({})
+    },
 
     // 编辑表单属性
-    formAttributes: Object,
+    formAttributes: {
+        type: Object,
+        default: () => ({})
+    },
 
     // 修改时是否刷新数据
     refreshEditData: Boolean,
