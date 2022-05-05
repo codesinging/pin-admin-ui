@@ -110,7 +110,7 @@
 
 <script setup>
 import {Plus, Refresh} from "@icon-park/vue-next";
-import {computed, provide, reactive, ref, useSlots, watch} from "vue";
+import {computed, inject, provide, reactive, ref, useSlots, watch} from "vue";
 import {useStatus} from "../../states/status";
 import ExtendDialog from "../extend/extend-dialog.vue";
 import {warning} from "../../utils/message";
@@ -221,7 +221,7 @@ const props = defineProps({
     },
 
     // 编辑表单默认数据
-    formDefault: Object,
+    formDefaults: Object,
 
     // 编辑表单属性
     formAttributes: Object,
@@ -238,7 +238,7 @@ const {
     resource,
     pageable,
     pageSize,
-    formDefault,
+    formDefaults,
     refreshEditData,
     refreshViewData,
 } = props
@@ -264,6 +264,18 @@ const cellLabel = (scope, action) => [scope.column.id, scope.$index, action].joi
 // 表格单元格请求状态
 const cellStatus = (scope, action) => status.status[cellLabel(scope, action)]
 
+// 列表数据刷新后执行
+const afterRefresh = inject('afterRefresh', null)
+
+// 编辑表单赋值前执行
+const beforeEdit = inject('beforeEdit', null)
+
+// 编辑表单提交前执行
+const beforeSubmit = inject('beforeSubmit', null)
+
+// 对一个值执行回调函数
+const callClosure = (value, closure) => typeof closure === 'function' ? closure(value) : value
+
 // 刷新列表数据
 const refresh = (params = {}) => {
     let config = {
@@ -278,7 +290,7 @@ const refresh = (params = {}) => {
     }
 
     apis.list(config).then(res => {
-        lister.value = toLister(res)
+        lister.value = callClosure(toLister(res), afterRefresh)
     })
 }
 
@@ -322,7 +334,7 @@ const form = ref()
 const onSubmit = () => {
     form.value.validate(valid => {
         if (valid) {
-            const data = formData.value
+            let data = callClosure(formData.value, beforeSubmit)
 
             const request = isEdit.value
                 ? apis.update(data, 'submit')
@@ -366,16 +378,16 @@ const onCancel = () => {
 
 // 点击新增按钮
 const onAdd = () => {
-    formData.value = Object.assign({}, formDefault)
+    formData.value = callClosure(JSON.parse(JSON.stringify(formDefaults)), beforeEdit)
     showEditDialog('新增')
 }
 
 // 点击修改按钮
 const onEdit = (row) => {
-    formData.value = Object.assign({}, row)
+    formData.value = callClosure(JSON.parse(JSON.stringify(row)), beforeEdit)
     if (refreshEditData) {
         apis.show(row, {label: 'show', message: false}).then(res => {
-            formData.value = res
+            formData.value = callClosure(res, beforeEdit)
         })
     }
     showEditDialog('编辑')
