@@ -9,6 +9,16 @@
                         <el-button size="small" type="primary" @click="refresh">刷新</el-button>
                     </div>
                 </template>
+
+                <el-form label-position="top">
+                    <template v-for="option in options" :key="option.id">
+                        <el-form-item v-if="option.group_id===group.id" :label="option.name">
+                            <template v-if="option.type === 'input'">
+                                <el-input v-bind="option.attributes"></el-input>
+                            </template>
+                        </el-form-item>
+                    </template>
+                </el-form>
             </el-card>
         </el-tab-pane>
     </el-tabs>
